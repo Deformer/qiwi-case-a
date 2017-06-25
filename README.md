@@ -1,1 +1,0 @@
-qiwi-case-a-server

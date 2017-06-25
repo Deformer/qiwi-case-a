@@ -26,7 +26,17 @@ const userSchema = new Schema({
   isConfirmed: {
     type: Boolean,
     default: false
-  }
+  },
+  dialogs: [{
+    type: ObjectId,
+    ref: 'Dialog'
+  }]
+});
+
+userSchema.virtual('dialogs', {
+  ref: 'Dialog',
+  localField: '_id',
+  foreignField: 'members'
 });
 
 userSchema.pre('save', function (next) {

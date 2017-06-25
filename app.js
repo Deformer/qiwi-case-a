@@ -99,5 +99,5 @@ apiRoutes.get('/users', function(req, res) {
 app.use('/', router);
 
 app.listen(config.port, function () {
-  console.log(`server is listening on port ${3000}`);
+  console.log(`server is listening on port ${config.port}`);
 });

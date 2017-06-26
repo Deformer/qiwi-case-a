@@ -1,5 +1,5 @@
 module.exports = {
-  port: 3002,
+  port: 5838,
   secret: 'kjwdbfwj32jnfaknljjh2',
   dbSettings: {
     database: "fintech",

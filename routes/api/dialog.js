@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const dialogService = require('../../services/dialog')
+const dialogService = require('../../services/dialog');
 
 router.get('/',(req,res) => {
   dialogService.getAllDialogsToUser(req.user.id).then(dialogs => {
@@ -7,9 +7,10 @@ router.get('/',(req,res) => {
   })
 });
 router.post('/', (req,res) => {
-  dialogService.createDialog([req.user.id]).then(() => {
-    res.sendStatus(200);
+  const {members} = req.body;
+  dialogService.createDialog(members).then((users) => {
+    res.status(200).send(200);
   })
-})
+});
 
 module.exports = router;

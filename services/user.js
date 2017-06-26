@@ -16,7 +16,7 @@ const UserService = {
     })
   }),
   confirmUserAccount: (userId, smsCode) => new Promise((resolve,reject) => {
-    User.findOne({_id: userId}).then((user) => {
+    User.findOne({where:{id: userId}}).then((user) => {
       //TODO check smsCode in future
       if(user) {
         User.update({isConfirmed: true}, {where: {id: userId}}).then(() => {

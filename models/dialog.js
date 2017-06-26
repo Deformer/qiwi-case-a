@@ -13,7 +13,7 @@ const Dialog = connection.define('dialog', {
   }
 });
 
-Dialog.belongsToMany(User, {through: 'dialogMembers'});
+Dialog.belongsToMany(User, {as: 'members', through: 'dialogMembers'});
 Dialog.hasMany(Balance, {foreignKey: 'dialogId'});
 Dialog.hasMany(Message, {foreignKey: 'dialogId'});
 

@@ -1,14 +1,21 @@
-/api/auth/sendSms
+POST /api/auth/sendSms
     request:
         body:
             phoneNumber: String
     response:
         userId: String
 
-/api/auth/confirmUserAccount
+POST /api/auth/confirmUserAccount
     request:
         body:
             userId: String
             smsCode: Number
     response:
         token: String
+GET /api/dialog/
+    response: list of the dialogs
+POST /api/dialog/
+    request:
+        members: Array of ids
+    response:
+        status: http-status

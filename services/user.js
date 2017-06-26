@@ -3,29 +3,28 @@ const smsService = require('./sms');
 
 const UserService = {
   createNewUser: (phoneNumber, smsCode) => new Promise((resolve,reject) => {
-    const newUser = new User({
+    const newUser = User.build({
       phoneNumber,
       smsCode
     });
-    const savingResult = newUser.save();
-    savingResult.then((user) => {
+    newUser.save().then(() => {
       smsService.sendSms(phoneNumber, smsCode).then(() => {
-        resolve(user._id);
+        resolve(newUser.id);
       }).catch(reject);
     }).catch(err => {
       reject()
     })
   }),
   confirmUserAccount: (userId, smsCode) => new Promise((resolve,reject) => {
-    const seacrhingResult = User.findOne({_id: userId});
-    seacrhingResult.then((user) => {
+    User.findOne({_id: userId}).then((user) => {
       //TODO check smsCode in future
-      const updatingResult = User.update({_id: userId}, {isConfirmed: true});
-      updatingResult.then(() => {
-        resolve(user);
-      })
-        .catch(reject);
-    })
+      if(user) {
+        User.update({isConfirmed: true}, {where: {id: userId}}).then(() => {
+          const {id,phoneNumber} = user.toJSON();
+          resolve({id, phoneNumber});
+        }).catch(reject);
+      }
+    }).catch(reject);
   })
 };
 

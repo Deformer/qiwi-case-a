@@ -1,29 +1,26 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const connection = require('./index');
+const Sequelize = require('sequelize');
+const User = require('./user');
 
-// set up a mongoose model and pass it using module.exports
-const messageSchema = new Schema({
-  from:{
-    type: ObjectId,
-    ref: 'User'
+const Message = connection.define('message', {
+  id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
   },
-  to: {
-    type: ObjectId,
-
+  type: {
+    type: Sequelize.STRING,
+  },
+  money: {
+    type: Sequelize.FLOAT,
+  },
+  comment: {
+    type: Sequelize.STRING
   }
-
 });
 
-messageSchema.virtual('dialogs', {
-  ref: 'Dialog',
-  localField: '_id',
-  foreignField: 'members'
-});
+Message.belongsTo(User, {foreignKey: 'from'});
+Message.belongsTo(User, {foreignKey: 'to'});
 
-messageSchema.pre('save', function (next) {
-  if(!this.name)
-    this.name = this.get('phoneNumber');
-  next();
-});
-
-module.exports = mongoose.model('User', messageSchema)
+module.exports = Message;

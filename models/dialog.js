@@ -1,33 +1,20 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const connection = require('./index');
+const Sequelize = require('sequelize');
 const User = require('./user');
+const Balance = require('./balance');
+const Message = require('./message');
 
-// set up a mongoose model and pass it using module.exports
-const dialogSchema = new Schema({
-  balances: [{
-    type: Number,
-    default: 5000
-  }],
-  members: [{
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  messages: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Message'
-  }]
+const Dialog = connection.define('dialog', {
+  id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+  }
 });
 
-dialogSchema.virtual('members', {
-  ref: 'User',
-  localField: '_id',
-  foreignField: 'dialogs'
-});
+Dialog.belongsToMany(User, {through: 'dialogMembers'});
+Dialog.hasMany(Balance, {foreignKey: 'dialogId'});
+Dialog.hasMany(Message, {foreignKey: 'dialogId'});
 
-dialogSchema.virtual('messages', {
-  ref: 'Message',
-  localField: '_id',
-  foreignField: 'dialog'
-});
-
-module.exports = mongoose.model('Dialog', dialogSchema)
+module.exports = Dialog;

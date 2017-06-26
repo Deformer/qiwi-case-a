@@ -3,9 +3,9 @@ const bodyParser = require('body-parser')
 const jwt    = require('jsonwebtoken');
 
 const config = require('./config');
-const db = require('./models');
+const connection = require('./models');
 const router = require('./routes');
-
+const Dialog = require('./models/dialog');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -97,7 +97,8 @@ apiRoutes.get('/users', function(req, res) {
 */
 
 app.use('/', router);
-
-app.listen(config.port, function () {
-  console.log(`server is listening on port ${config.port}`);
+connection.sync().then(() => {
+    app.listen(config.port, () => {
+        console.log(`server is listening on port ${config.port}`);
+    });
 });

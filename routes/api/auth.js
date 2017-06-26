@@ -17,11 +17,11 @@ router.post('/sendSms',(req,res) => {
 router.post('/confirmUserAccount', (req,res) => {
   const userId = req.body.userId;
   const smsCode = req.body.smsCode;
-  userService.confirmUserAccount(userId, smsCode).then((user) => {
-    authService.createToken(user, config.secret).then((token) => {
+  userService.confirmUserAccount(userId, smsCode).then((userObjectToTokenize) => {
+    authService.createToken(userObjectToTokenize, config.secret).then((token) => {
       res.status(200).send({token});
     })
-  }).catch(() => {
+  }).catch((err) => {
     res.sendStatus(500);
   });
 });

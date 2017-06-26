@@ -1,4 +1,4 @@
 const { dbSettings } = require('../config');
-const mongoose = require('mongoose');
+const Sequelize = require('sequelize');
 
-module.exports = mongoose.connect(dbSettings.url, dbSettings.options);
+module.exports = new Sequelize(...Object.values(dbSettings));

@@ -1,13 +1,15 @@
 module.exports = {
-  port: 3001,
+  port: 3002,
   secret: 'kjwdbfwj32jnfaknljjh2',
   dbSettings: {
-    url: 'mongodb://ds064649.mlab.com:64649/fintech',
+    database: "fintech",
+    user: "admin",
+    password: "admin",
     options: {
-      db: { native_parser: true },
-      server: { poolSize: 5 },
-      user: 'admin',
-      pass: 'admin'
-    }
+        host: "localhost",
+        dialect: "postgres",
+        port: 5432,
+        logging: false
+      }
   }
 };

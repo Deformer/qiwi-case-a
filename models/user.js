@@ -1,48 +1,32 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const connection = require('./index');
+const Sequelize = require('sequelize');
+const Balance = require('./balance');
 
-// set up a mongoose model and pass it using module.exports
-const userSchema = new Schema({
+const User = connection.define('user', {
+  id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   phoneNumber: {
-    type: String,
-    unique : true,
-    required : true
+    type: Sequelize.STRING,
+    unique: true,
+    allowNull: false
   },
   name: {
-    type: String,
-    default: this.phoneNumber
-  },
-  balance: {
-    type: Number,
-    default: 5000
-  },
-  smsCode: {
-    type: Number
-  },
-  qiwiToken: {
-    type: String,
-    required: false
+    type: Sequelize.STRING,
+    allowNull: true,
+    defaultValue: function(){
+      return this.phoneNumber;
+    }
   },
   isConfirmed: {
-    type: Boolean,
-    default: false
-  },
-  dialogs: [{
-    type: ObjectId,
-    ref: 'Dialog'
-  }]
+    type: Sequelize.BOOLEAN,
+      defaultValue: false,
+  }
 });
 
-userSchema.virtual('dialogs', {
-  ref: 'Dialog',
-  localField: '_id',
-  foreignField: 'members'
-});
+User.hasMany(Balance, {foreignKey: 'userId'});
 
-userSchema.pre('save', function (next) {
-  if(!this.name)
-    this.name = this.get('phoneNumber');
-  next();
-});
-
-module.exports = mongoose.model('User', userSchema)
+module.exports = User;

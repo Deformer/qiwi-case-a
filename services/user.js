@@ -25,7 +25,8 @@ const UserService = {
         }).catch(reject);
       }
     }).catch(reject);
-  })
+  }),
+  checkIfUserExist: (phoneNumber) => User.findOne({where: {phoneNumber}}).then(user => !!user)
 };
 
 module.exports = UserService;

@@ -9,7 +9,7 @@ router.get('/',(req,res) => {
 router.post('/', (req,res) => {
   const {members} = req.body;
   dialogService.createDialog(members).then((users) => {
-    res.status(200).send(200);
+    res.status(200).send();
   })
 });
 

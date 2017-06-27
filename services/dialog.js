@@ -21,5 +21,6 @@ module.exports = {
         const dialog = Dialog.build({});
         dialog.save().then(() => dialog.setMembers(users))
     })
-  }
+  },
+  checkIfDialogExistWithId: (id) => Dialog.findOne({where:{id}}).then(dialog => !!dialog)
 };

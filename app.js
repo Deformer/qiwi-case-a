@@ -107,17 +107,16 @@ io.sockets
     secret: config.secret,
     timeout: 15000 // 15 seconds to send the authentication message
   })).on('authenticated', function(socket) {
-        openedConnections[socket.decoded_token.id] = socket;
-        socket.on('disconnect', () => {
-            console.log('user with '+ socket.decoded_token.id+ ' disconnected');
-            delete openedConnections[socket.decoded_token.id]
-        });
-        socket.on('sendMessage', (function (data) {
-            if(openedConnections[data.id]) {
-              openedConnections[data.id].emit('message', {message: data.message});
-            }
-        }));
-
+    openedConnections[socket.decoded_token.id] = socket;
+    socket.on('disconnect', () => {
+        console.log('user with '+ socket.decoded_token.id+ ' disconnected');
+        delete openedConnections[socket.decoded_token.id]
+    });
+    socket.on('sendMessage', (function (data) {
+        if(openedConnections[data.id]) {
+            openedConnections[data.id].emit('message', {message: data.message});
+        }
+    }));
   console.log('hello! ' + socket.decoded_token.id);
 });
 

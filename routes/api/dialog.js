@@ -17,7 +17,10 @@ router.post('/', (req,res) => {
 router.post('/postMessage',(req,res) => {
   const {user} = req;
   const {message} = req.body;
-
+  message.from = user.id;
+  messageService.saveMessage(message).then((response) => {
+    res.sendStatus(200);
+  });
 });
 
 module.exports = router;

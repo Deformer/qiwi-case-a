@@ -6,19 +6,32 @@ const User = require('../models/user');
 module.exports = {
   getAllDialogsToUser: (userId) => Dialog.findAll(
     {
-      include:[{
+      where:{'"dialogMembers".userId': userId},
+      include:[
+      {
         model: User,
-        as: 'members'
+        as: User.tableName
       },
         Message,
-        Balance
+      {
+        model:Balance,
+        as: 'balances'
+      }
       ]
     }).then(dialogs => dialogs.map(d => d.toJSON())),
   createDialog: (memberIds) => {
     return Promise.all(memberIds.map(
       (id) => User.findOne({where:{id}})
       )).then(users => {
-        const dialog = Dialog.build({});
+        const dialog = Dialog.build({balances: memberIds.map(id => (
+          {
+            money:0,
+            userId: id
+          },
+            {
+              includes:[{model:Balance, as: 'balances'}]
+            }
+          ))});
         dialog.save().then(() => dialog.setMembers(users))
     })
   },

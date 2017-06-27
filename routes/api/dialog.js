@@ -14,6 +14,15 @@ router.post('/', (req,res) => {
   })
 });
 
+/*{
+  "message":{
+  "type": "online",
+    "money": 100,
+    "comment": "your mom",
+    "to":2,
+    "dialogId": 6
+}
+}*/
 router.post('/postMessage',(req,res) => {
   const {user} = req;
   const {message} = req.body;

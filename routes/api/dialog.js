@@ -2,15 +2,24 @@ const router = require('express').Router();
 const dialogService = require('../../services/dialog');
 const messageService = require('../../services/message');
 const balanceService = require('../../services/balance');
+const User = require('../../models/user')
 
 router.get('/', (req, res) => {
   dialogService.getAllDialogsToUser(req.user.id).then((dialogs) => {
-    res.status(200).send(dialogs);
+    Promise.all(dialogs.map(dialog => dialog.getUsers().then(result =>  result.map(r => r.toJSON()))
+    )).then((users) => {
+      const _dialogs = dialogs.map(d => d.toJSON());
+      for(let i = 0; i< _dialogs.length;i++){
+        _dialogs[i].users = users[i];
+      }
+      res.status(200).send(_dialogs);
+    });
   });
 });
 router.post('/', (req, res) => {
   const { members, balance } = req.body;
   dialogService.createDialog(members, -1*Math.round(balance / members.length)).then((dialog) => {
+
     res.status(200).send(dialog);
   });
 });

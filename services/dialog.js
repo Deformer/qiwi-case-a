@@ -18,7 +18,7 @@ const dialogService = {
           as: 'balances',
         },
       ],
-    }).then(dialogs => dialogs.map(d => d.toJSON())),
+    }).then(dialogs => dialogs),
   createDialog: (memberIds, avgBalance) => Promise.all(memberIds.map(
       id => User.findOne({ where: { id } }))).then((users) => {
         const balances = memberIds.map(id => ({

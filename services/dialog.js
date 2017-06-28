@@ -3,14 +3,14 @@ const Message = require('../models/message');
 const Balance = require('../models/balance');
 const User = require('../models/user');
 
-module.exports = {
+const dialogService = {
+  findById: (id) => Dialog.findOne({where:{id}, include:[User, Balance, Message]}),
   getAllDialogsToUser: userId => Dialog.findAll(
     {
-      where: { '"dialogMembers".userId': userId },
       include: [
         {
           model: User,
-          as: User.tableName,
+          where: {id: userId}
         },
         Message,
         {
@@ -19,20 +19,21 @@ module.exports = {
         },
       ],
     }).then(dialogs => dialogs.map(d => d.toJSON())),
-  createDialog: memberIds => Promise.all(memberIds.map(
+  createDialog: (memberIds, avgBalance) => Promise.all(memberIds.map(
       id => User.findOne({ where: { id } }))).then((users) => {
-        const dialog = Dialog.build({
-          balances: memberIds.map(id => (
+        const balances = memberIds.map(id => ({
+          money: avgBalance,
+          userId: id,
+        }));
+        return Dialog.create(
           {
-            money: 0,
-            userId: id,
+            balances,
           },
           {
-            includes: [{ model: Balance, as: 'balances' }],
-          }
-          )),
-        });
-        dialog.save().then(() => dialog.setMembers(users));
+            include: [Balance, User],
+          }).then(dialog => dialog.setUsers(users).then(() => dialogService.findById(dialog.id)));
       }),
   checkIfDialogExistWithId: id => Dialog.findOne({ where: { id } }).then(dialog => !!dialog),
 };
+
+module.exports = dialogService;

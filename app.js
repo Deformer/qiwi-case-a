@@ -1,13 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const jwt    = require('jsonwebtoken');
 const http = require('http');
 const socketioJwt = require('socketio-jwt');
 
 const config = require('./config');
 const connection = require('./models');
 const router = require('./routes');
-const Dialog = require('./models/dialog');
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -97,32 +96,33 @@ apiRoutes.get('/users', function(req, res) {
 });
 */
 app.use('/', router);
-const server = http.createServer(app)
+const server = http.createServer(app);
 
 const openedConnections = {};
 
 const io = require('socket.io')(server);
+
 io.sockets
   .on('connection', socketioJwt.authorize({
     secret: config.secret,
-    timeout: 15000 // 15 seconds to send the authentication message
-  })).on('authenticated', function(socket) {
+    timeout: 15000, // 15 seconds to send the authentication message
+  })).on('authenticated', (socket) => {
     openedConnections[socket.decoded_token.id] = socket;
     socket.on('disconnect', () => {
-        console.log('user with '+ socket.decoded_token.id+ ' disconnected');
-        delete openedConnections[socket.decoded_token.id]
+      console.log(`user with ${socket.decoded_token.id} disconnected`);
+      delete openedConnections[socket.decoded_token.id];
     });
-    socket.on('sendMessage', (function (data) {
-        if(openedConnections[data.id]) {
-            openedConnections[data.id].emit('message', {message: data.message});
-        }
+    socket.on('sendMessage', ((data) => {
+      if (openedConnections[data.id]) {
+        openedConnections[data.id].emit('message', { message: data.message });
+      }
     }));
-  console.log('hello! ' + socket.decoded_token.id);
-});
+    console.log(`hello! ${socket.decoded_token.id}`);
+  });
 
 
 connection.sync().then(() => {
-    server.listen(config.port, () => {
-        console.log(`server is listening on port ${config.port}`);
-    });
+  server.listen(config.port, () => {
+    console.log(`server is listening on port ${config.port}`);
+  });
 });

@@ -10,11 +10,11 @@ const Dialog = connection.define('dialog', {
     allowNull: false,
     primaryKey: true,
     autoIncrement: true,
-  }
+  },
 });
 
-Dialog.belongsToMany(User, {through: 'dialogMembers'});
-Dialog.hasMany(Balance, {as: 'balances', foreignKey: 'dialogId'});
-Dialog.hasMany(Message, {foreignKey: 'dialogId'});
+Dialog.belongsToMany(User, { through: 'dialogMembers' });
+Dialog.hasMany(Balance, { as: 'balances', foreignKey: 'dialogId' });
+Dialog.hasMany(Message, { foreignKey: 'dialogId' });
 
 module.exports = Dialog;

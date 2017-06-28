@@ -10,9 +10,9 @@ const Balance = connection.define('balance', {
   },
   money: {
     type: Sequelize.FLOAT,
-    defaultValue: 0
-  }
+    defaultValue: 0,
+  },
 });
 
 
-module.exports = Balance
+module.exports = Balance;

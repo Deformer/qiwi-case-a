@@ -16,11 +16,11 @@ const Message = connection.define('message', {
     type: Sequelize.FLOAT,
   },
   comment: {
-    type: Sequelize.STRING
-  }
+    type: Sequelize.STRING,
+  },
 });
 
-Message.belongsTo(User, {foreignKey: 'from'});
-Message.belongsTo(User, {foreignKey: 'to'});
+Message.belongsTo(User, { foreignKey: 'from' });
+Message.belongsTo(User, { foreignKey: 'to' });
 
 module.exports = Message;

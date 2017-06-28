@@ -12,21 +12,21 @@ const User = connection.define('user', {
   phoneNumber: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
   },
   name: {
     type: Sequelize.STRING,
     allowNull: true,
-    defaultValue: function(){
+    defaultValue() {
       return this.phoneNumber;
-    }
+    },
   },
   isConfirmed: {
     type: Sequelize.BOOLEAN,
-      defaultValue: false,
-  }
+    defaultValue: false,
+  },
 });
 
-User.hasMany(Balance, {foreignKey: 'userId'});
+User.hasMany(Balance, { foreignKey: 'userId' });
 
 module.exports = User;

@@ -8,8 +8,8 @@ router.get('/', (req, res) => {
   });
 });
 router.post('/', (req, res) => {
-  const { members } = req.body;
-  dialogService.createDialog(members, 0).then((dialog) => {
+  const { members, balance } = req.body;
+  dialogService.createDialog(members, balance / members.length).then((dialog) => {
     res.status(200).send(dialog);
   });
 });

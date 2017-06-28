@@ -17,6 +17,7 @@ GET /api/dialog/
 POST /api/dialog/
     request:
         members: Array of ids
+        balance: Number
     response:
         status: http-status
 

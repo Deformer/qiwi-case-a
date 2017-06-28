@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
 
 /* {
   "message":{
-  "type": "online",
+    "type": "online",
     "money": 100,
     "comment": "your mom",
     "to":2,

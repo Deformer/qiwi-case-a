@@ -19,7 +19,7 @@ module.exports = {
           }
           const message = Message.build(messageObject);
           message.save().then(() => {
-            resolve({code: 200});
+            resolve(message);
           });
         });
       });

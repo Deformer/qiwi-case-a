@@ -18,6 +18,10 @@ const Message = connection.define('message', {
   comment: {
     type: Sequelize.STRING,
   },
+  isConfirmed: {
+    type: Sequelize.BOOLEAN,
+    default: false
+  }
 });
 
 Message.belongsTo(User, { foreignKey: 'from' });

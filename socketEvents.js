@@ -35,7 +35,7 @@ let confirmMessageAndUpdateBalance = (userId, message) => new Promise((resolve, 
 //
 // });
 
-let answerOnMessage = function (socket, message) {
+let answerOnMessage = function (socket, message, eventName) {
     let messageToSender = {
         messageId: message.id,
     };
@@ -46,9 +46,9 @@ let answerOnMessage = function (socket, message) {
         balanceService.getBalance(message.to, message.dialogId).then((recipientBalance) => {
             messageToSender.balance = senderBalance;
             messageToRecipient.balance = recipientBalance;
-            socket.emit('responseConfirmMessage', messageToRecipient);
+            socket.emit(eventName, messageToRecipient);
             if (openedConnections[message.from]) {
-                openedConnections[message.from].emit('responseConfirmMessage', messageToSender);
+                openedConnections[message.from].emit(eventName, messageToSender);
             }
         })
     })
@@ -85,7 +85,7 @@ module.exports = {
                           });*/
                           balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
                             balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
-                              answerOnMessage(socket, message);
+                              answerOnMessage(socket, message, 'message');
                             })
                         })
                       });
@@ -106,7 +106,7 @@ module.exports = {
                       if (message.to === socket.decoded_token.id) {
                           confirmMessageAndUpdateBalance(userId, message).then(response => {
                               if (response === true) {
-                                  answerOnMessage(socket, message);
+                                  answerOnMessage(socket, message, 'responseConfirmMessage');
                               }
                           })
                       }

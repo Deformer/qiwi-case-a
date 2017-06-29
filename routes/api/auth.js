@@ -10,7 +10,12 @@ router.post('/sendSms', (req, res) => {
   userService.createNewUser(phoneNumber, smsCode).then((userId) => {
     res.status(200).send({ userId });
   }).catch((err) => {
-    res.sendStatus(200);
+    userService.getUserWithPhoneNumber(phoneNumber).then((user) =>{
+     if(user) {
+       return res.status(200).send({userId: user.id});
+     }
+     res.sendStatus(500);
+    })
   });
 });
 

@@ -75,14 +75,19 @@ module.exports = {
                   message.from = userId;
                   console.log(message);
                   if (message.type === 'online') {
-                      message.isConfirmed = false;
+                      message.isConfirmed = true;
                       //Todo немножко нехорошо, потому что 2 запроса в БД подряд.
                       messageService.saveMessage(message).then((response) => {
-                          confirmMessageAndUpdateBalance(userId, message).then(response => {
+                          /*confirmMessageAndUpdateBalance(userId, message).then(response => {
                               if (response === true) {
-                                  answerOnMessage(socket, message);
+
                               }
-                          });
+                          });*/
+                          balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
+                            balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
+                              answerOnMessage(socket, message);
+                            })
+                        })
                       });
                   } else if (message.type === 'cash') {
                       message.isConfirmed = false;

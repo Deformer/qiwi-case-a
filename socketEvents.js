@@ -78,14 +78,24 @@ module.exports = {
                       message.isConfirmed = true;
                       //Todo немножко нехорошо, потому что 2 запроса в БД подряд.
                       messageService.saveMessage(message).then((response) => {
-                          /*confirmMessageAndUpdateBalance(userId, message).then(response => {
-                              if (response === true) {
-
-                              }
-                          });*/
                           balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
                             balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
-                              answerOnMessage(socket, message, 'message');
+                              let messageToSender = {
+                                message: message,
+                              };
+                              let messageToRecipient = {
+                                message: message,
+                              };
+                              balanceService.getBalance(message.from, message.dialogId).then((senderBalance) => {
+                                balanceService.getBalance(message.to, message.dialogId).then((recipientBalance) => {
+                                  messageToSender.balance = senderBalance;
+                                  messageToRecipient.balance = recipientBalance;
+                                  socket.emit(eventName, messageToRecipient);
+                                  if (openedConnections[message.from]) {
+                                    openedConnections[message.from].emit('message', messageToSender);
+                                  }
+                                })
+                              })
                             })
                         })
                       });

@@ -75,7 +75,7 @@ module.exports = {
                   message.from = userId;
                   console.log(message);
                   if (message.type === 'online') {
-                      message.isConfirmed = true;
+                      message.isConfirmed = false;
                       //Todo немножко нехорошо, потому что 2 запроса в БД подряд.
                       messageService.saveMessage(message).then((response) => {
                           confirmMessageAndUpdateBalance(userId, message).then(response => {

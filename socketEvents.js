@@ -6,8 +6,8 @@ const balanceService = require('./services/balance');
 
 const openedConnections = [];
 
-let confirmMessageAndUpdateBalance = (message) => new Promise((resolve, reject) => {
-  messageService.confirmMessage(message).then((result) => {
+let confirmMessageAndUpdateBalance = (userId, message) => new Promise((resolve, reject) => {
+  messageService.confirmMessage(userId,message.id).then((result) => {
     if (result[0] > 0) {
       balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
         balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
@@ -19,7 +19,6 @@ let confirmMessageAndUpdateBalance = (message) => new Promise((resolve, reject) 
     }
   });
 });
-
 
 let answerOnMessage = function (socket, message) {
     let messageToSender = {
@@ -65,7 +64,7 @@ module.exports = {
 
                       //Todo немножко нехорошо, потому что 2 запроса в БД подряд.
                       messageService.saveMessage(message).then((response) => {
-                          confirmMessageAndUpdateBalance(message).then(response => {
+                          confirmMessageAndUpdateBalance(userId, message).then(response => {
                               if (response === true) {
                                   answerOnMessage(socket, message);
                               }
@@ -82,10 +81,11 @@ module.exports = {
                   }
               });
               socket.on('requestConfirmMessage', ({messageId, answer}) => {
+                  const userId = socket.decoded_token.id;
                   console.log(`Get confirm request ${messageId}/${answer}`);
                   messageService.getById(messageId).then(message => {
                       if (message.to === socket.decoded_token.id) {
-                          confirmMessageAndUpdateBalance(message).then(response => {
+                          confirmMessageAndUpdateBalance(userId, message).then(response => {
                               if (response === true) {
                                   answerOnMessage(socket, message);
                               }

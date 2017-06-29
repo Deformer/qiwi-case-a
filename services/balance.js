@@ -9,7 +9,6 @@ module.exports = {
     }),
 
     //TODO Check
-    getBalance: (userId, dialogId) => {
-        Balance.findOne({where: {userId, dialogId}})
-    }
+    getBalance: (userId, dialogId) => Balance.findOne({where: {userId, dialogId}})
+
 };

@@ -7,7 +7,7 @@ const balanceService = require('./services/balance');
 const openedConnections = [];
 
 let confirmMessageAndUpdateBalance = (userId, message) => new Promise((resolve, reject) => {
-  messageService.confirmMessage(userId,message.id).then((result) => {
+  messageService.confirmMessage(userId, message.id).then((result) => {
     if (result[0] > 0) {
       balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
         balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
@@ -19,6 +19,21 @@ let confirmMessageAndUpdateBalance = (userId, message) => new Promise((resolve, 
     }
   });
 });
+
+
+// confirmMessageAndUpdateBalance(1,{
+//   id: 4,
+//   type: "cashe",
+//   money: 100,
+//   comment: "your mom",
+//   isConfirmed: false,
+//   from: 3,
+//   to: 1,
+//   dialogId: 36
+// }).then(resp => {
+//   console.log(resp);
+//
+// });
 
 let answerOnMessage = function (socket, message) {
     let messageToSender = {
@@ -61,7 +76,6 @@ module.exports = {
                   console.log(message);
                   if (message.type === 'online') {
                       message.isConfirmed = true;
-
                       //Todo немножко нехорошо, потому что 2 запроса в БД подряд.
                       messageService.saveMessage(message).then((response) => {
                           confirmMessageAndUpdateBalance(userId, message).then(response => {

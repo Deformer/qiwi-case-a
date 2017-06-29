@@ -6,15 +6,20 @@ const balanceService = require('./services/balance');
 
 const openedConnections = [];
 
-let confirmMessageAndUpdateBalance = (message) => messageService.confirmMessage(message).then((result) => {
+let confirmMessageAndUpdateBalance = (message) => new Promise((resolve, reject) => {
+  messageService.confirmMessage(message).then((result) => {
     if (result[0] > 0) {
-        balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
-            balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
-                return true;
-            })
+      balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
+        balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
+          resolve(true);
         })
+      })
+    } else {
+        resolve(false);
     }
+  });
 });
+
 
 let answerOnMessage = function (socket, message) {
     let messageToSender = {

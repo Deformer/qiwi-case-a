@@ -91,8 +91,8 @@ module.exports = {
                                   messageToSender.balance = senderBalance;
                                   messageToRecipient.balance = recipientBalance;
                                   socket.emit('message', messageToRecipient);
-                                  if (openedConnections[message.from]) {
-                                    openedConnections[message.from].emit('message', messageToSender);
+                                  if (openedConnections[message.to]) {
+                                    openedConnections[message.to].emit('message', messageToSender);
                                   }
                                 })
                               })

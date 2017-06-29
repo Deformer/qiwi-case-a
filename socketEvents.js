@@ -90,7 +90,7 @@ module.exports = {
                                 balanceService.getBalance(message.to, message.dialogId).then((recipientBalance) => {
                                   messageToSender.balance = senderBalance;
                                   messageToRecipient.balance = recipientBalance;
-                                  socket.emit(eventName, messageToRecipient);
+                                  socket.emit('message', messageToRecipient);
                                   if (openedConnections[message.from]) {
                                     openedConnections[message.from].emit('message', messageToSender);
                                   }

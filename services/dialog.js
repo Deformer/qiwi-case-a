@@ -25,6 +25,7 @@ const dialogService = {
           money: avgBalance,
           userId: id,
         }));
+        balances[0].money *= -1;
         return Dialog.create(
           {
             balances,

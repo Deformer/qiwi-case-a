@@ -5,9 +5,9 @@ const authService = require('../../services/auth');
 const config = require('../../config');
 
 router.post('/sendSms', (req, res) => {
-  const phoneNumber = req.body.phoneNumber;
+  const { phoneNumber, userName } = req.body;
   const smsCode = generator.genSmsCode(6);
-  userService.createNewUser(phoneNumber, smsCode).then((userId) => {
+  userService.createNewUser(phoneNumber, userName, smsCode).then((userId) => {
     res.status(200).send({ userId });
   }).catch((err) => {
     userService.getUserWithPhoneNumber(phoneNumber).then((user) =>{

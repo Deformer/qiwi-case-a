@@ -2,10 +2,11 @@ const User = require('../models/user');
 const smsService = require('./sms');
 
 const UserService = {
-  createNewUser: (phoneNumber, smsCode) => new Promise((resolve, reject) => {
+  createNewUser: (phoneNumber, name, smsCode) => new Promise((resolve, reject) => {
     const newUser = User.build({
       phoneNumber,
       smsCode,
+      name
     });
     newUser.save().then(() => {
       smsService.sendSms(phoneNumber, smsCode).then(() => {

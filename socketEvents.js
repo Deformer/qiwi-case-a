@@ -77,14 +77,14 @@ module.exports = {
                   if (message.type === 'online') {
                       message.isConfirmed = true;
                       //Todo немножко нехорошо, потому что 2 запроса в БД подряд.
-                      messageService.saveMessage(message).then((response) => {
+                      messageService.saveMessage(message).then((responseMessage) => {
                           balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {
                             balanceService.changeBalance(-1 * message.money, message.to, message.dialogId).then(() => {
                               let messageToSender = {
-                                message: message,
+                                message: responseMessage,
                               };
                               let messageToRecipient = {
-                                message: message,
+                                message: responseMessage,
                               };
                               balanceService.getBalance(message.from, message.dialogId).then((senderBalance) => {
                                 balanceService.getBalance(message.to, message.dialogId).then((recipientBalance) => {

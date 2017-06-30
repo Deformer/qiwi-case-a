@@ -1,6 +1,7 @@
 const Message = require('../models/message');
 const userService = require('./user');
 const dialogService = require('./dialog');
+const Dialog = require('../models/dialog');
 
 module.exports = {
     getById: (id) => Message.findOne({where: {id}}),
@@ -19,7 +20,15 @@ module.exports = {
                     }
                     const message = Message.build(messageObject);
                     message.save().then(() => {
-                        resolve(message);
+                        Dialog.update({
+                            updatedAt: new Date()
+                          },
+                          {
+                            where:{id: messageObject.dialogId}
+                          }
+                        ).then(() => {
+                          resolve(message);
+                        })
                     });
                 });
             });

@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
 });
 router.post('/', (req, res) => {
   const { members, balance } = req.body;
-  dialogService.createDialog(members, -1*Math.round(balance / members.length)).then((dialog) => {
+  dialogService.createDialog(members, -1*balance).then((dialog) => {
 
     res.status(200).send(dialog);
   });
@@ -32,7 +32,10 @@ router.post('/', (req, res) => {
     "to":2,
     "dialogId": 6
 }
-}*/
+}
+ "2017-06-30T08:05:39.274Z"
+
+*/
 router.post('/postMessage', (req, res) => {
   const { user } = req;
   const { message } = req.body;
@@ -57,7 +60,7 @@ router.post('/postMessage', (req, res) => {
 router.post('/confirmMessage', (req,res) => {
   const {user} = req;
   const {messageId} = req.body;
-  messageService.confirmMessage(1, messageId).then((conf) => {
+  messageService.confirmMessage(22, messageId).then((conf) => {
     if(conf[0] > 0){
       messageService.getById(messageId).then((message) => {
         balanceService.changeBalance(message.money, message.from, message.dialogId).then(() => {

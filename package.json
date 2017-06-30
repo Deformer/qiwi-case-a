@@ -26,6 +26,7 @@
     "mongoose": "^4.11.0",
     "npm": "^5.0.4",
     "pg": "^6.4.0",
+    "request": "^2.81.0",
     "sequelize": "^3.30.4",
     "socket.io": "^2.0.3",
     "socketio-jwt": "^4.5.0"

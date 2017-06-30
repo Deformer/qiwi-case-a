@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const smsService = require('./sms');
+const request = require('request');
 
 const UserService = {
   createNewUser: (phoneNumber, name, smsCode) => new Promise((resolve, reject) => {
@@ -29,6 +30,9 @@ const UserService = {
   }),
   getUserWithPhoneNumber: phoneNumber => User.findOne({ where: { phoneNumber } }).then(user => user),
   checkIfUserExistWithId: id => User.findOne({ where: { id } }).then(user => !!user),
+  bindQiwiWallet: (id) => new Promise((resolve, reject) => {
+
+  })
 };
 
 module.exports = UserService;
